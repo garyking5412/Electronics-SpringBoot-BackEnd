@@ -26,7 +26,7 @@ public class Category {
 	@Column(name="name")
 	private String name;
 	@OneToMany(mappedBy = "category",fetch = FetchType.EAGER)
-	@JsonIgnore
+//	@JsonIgnore
 	private List<Product> products;
 	public Category() {
 		super();
@@ -50,8 +50,8 @@ public class Category {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public List<Product> getProducts() {
-		return products;
+	public int getProducts() {
+		return products.size();
 	}
 	public void setProducts(List<Product> products) {
 		this.products = products;

@@ -1,14 +1,21 @@
 package com.bkap.Services;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
 
+import com.bkap.Filters.InvoiceFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import com.bkap.Entities.Invoice;
@@ -106,6 +113,30 @@ public class InvoiceServiceImpl implements InvoiceService {
 		}
 		Invoice iv =  inRepos.getById(invoiceId);
 		this.remove(iv);
+	}
+
+	@Override
+	@Transactional
+	public List<Invoice> filter(InvoiceFilter filter) {
+		return inRepos.findAll(new Specification<Invoice>() {
+			@Override
+			public Predicate toPredicate(Root<Invoice> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
+				List<Predicate>predicates = new ArrayList<Predicate>();
+				if(filter.getId()!=0){
+					predicates.add(criteriaBuilder.equal(root.get("id"),filter.getId()));
+				}
+				if(filter.getCustomer()!=null&&!filter.getCustomer().isEmpty()){
+					predicates.add(criteriaBuilder.like(root.get("customer"),"%"+filter.getCustomer()+"%"));
+				}
+				if(filter.getStartDate()!=null&&filter.getEndDate()!=null){
+					predicates.add(criteriaBuilder.between(root.get("date"),filter.getStartDate(),filter.getEndDate()));
+				}
+				if(filter.getCustomerContact()!=0){
+					predicates.add(criteriaBuilder.equal(root.get("customerContact"),filter.getCustomerContact()));
+				}
+				return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
+			}
+		});
 	}
 
 	@Override

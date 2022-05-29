@@ -6,6 +6,7 @@ import com.bkap.Filters.ProductFilter;
 import org.springframework.data.domain.Page;
 
 import com.bkap.Entities.Product;
+import org.springframework.data.domain.PageRequest;
 
 public interface ProductService {
 
@@ -20,5 +21,5 @@ public interface ProductService {
 //	Page<Employee>paginations(EmployeeFilter filter);
 	Page<Product>getAllPaginated(int pageNumber);
 	List<Product> updateOnDeleteCategory(int cateId);
-	List<Product> filter(ProductFilter p);
+	Page<Product> filter(ProductFilter p, int pageNumber,String sort);
 }

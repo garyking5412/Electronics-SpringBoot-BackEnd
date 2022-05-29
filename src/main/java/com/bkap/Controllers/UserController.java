@@ -2,6 +2,7 @@ package com.bkap.Controllers;
 
 import java.util.List;
 
+import com.bkap.Filters.InvoiceFilter;
 import com.bkap.Filters.ProductFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -53,10 +54,10 @@ public class UserController {
     private InvoiceServiceImpl invService;
 
     //tìm kiếm sản phẩm/cate
-    @GetMapping(value = "/filter")
-    @CrossOrigin(value = "*", methods = RequestMethod.GET)
-    public List<Product> filter(@RequestBody ProductFilter filter) {
-        return prodService.filter(filter);
+    @PostMapping(value = "/product/filter/{sort}/{pageNumber}")
+    @CrossOrigin(value = "*", methods = RequestMethod.POST)
+    public Page<Product> filter(@RequestBody ProductFilter filter,@PathVariable("sort") String sort,@PathVariable("pageNumber") int pageNumber) {
+        return prodService.filter(filter,pageNumber,sort);
     }
 
     //		xem sản phẩm/cate
@@ -91,7 +92,12 @@ public class UserController {
         return prodService.getById(prodId);
     }
 
-    //		xem giỏ hàng
+    //		xem giỏ hàng/invoice
+    @GetMapping(value="/invoiceFilter")
+    @CrossOrigin(value="*",methods=RequestMethod.GET)
+    public List<Invoice> filterInvoice(@RequestBody InvoiceFilter filter){
+        return invService.filter(filter);
+    }
 //      mua hàng
 //		đăng ký
     @PostMapping("/register")
@@ -154,8 +160,8 @@ public class UserController {
     }
 
     //		xem danh sách hóa đơn
-    @GetMapping(value = "/getInvoiceByCustomer")
-    @CrossOrigin(value = "*", methods = RequestMethod.GET)
+    @PostMapping(value = "/getInvoiceByCustomer")
+    @CrossOrigin(value = "*", methods = RequestMethod.POST)
     public List<Invoice> getInvoiceByCustomer(@RequestBody Request request) {
         String customer = request.getCustomer();
         int phone = request.getContact();

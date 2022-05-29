@@ -9,7 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
-//@AllArgsConstructor
+//@AllArgsConstructor 	
 public class UserDetail implements UserDetails {
 	private static final long serialVersionUID = 1L;
 	

@@ -3,6 +3,7 @@ package com.bkap.Services;
 import java.util.Date;
 import java.util.List;
 
+import com.bkap.Filters.InvoiceFilter;
 import org.springframework.data.domain.Page;
 
 import com.bkap.Entities.Invoice;
@@ -28,4 +29,5 @@ public interface InvoiceService {
 	void remove(InvoiceDetail p);
 	void removeDetailByInvoice (int invoiceId);
 //	Page<Employee>paginations(EmployeeFilter filter);
+	List<Invoice> filter (InvoiceFilter filter);
 }

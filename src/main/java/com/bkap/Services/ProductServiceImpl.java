@@ -13,6 +13,7 @@ import com.bkap.Filters.ProductFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -97,7 +98,8 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional
-    public List<Product> filter(ProductFilter filter) {
+    public Page<Product> filter(ProductFilter filter,int pageNumber,String sort) {
+        Pageable page =  PageRequest.of(pageNumber,6,Sort.by(sort).ascending());
         return repos.findAll(new Specification<Product>() {
             private static final long serialVersionUID = 1L;
 
@@ -116,7 +118,7 @@ public class ProductServiceImpl implements ProductService {
                 }
                 return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
             }
-        });
+        },page);
     }
 
 }
