@@ -16,7 +16,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name="Category")
-@JsonIgnoreProperties(value={"hibernateLazyInitializer","handler"})
+//@JsonIgnoreProperties(value={"hibernateLazyInitializer","handler"})
 public class Category {
 
 	@Id
@@ -26,7 +26,7 @@ public class Category {
 	@Column(name="name")
 	private String name;
 	@OneToMany(mappedBy = "category",fetch = FetchType.EAGER)
-//	@JsonIgnore
+	@JsonIgnore
 	private List<Product> products;
 	public Category() {
 		super();
@@ -50,8 +50,8 @@ public class Category {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public int getProducts() {
-		return products.size();
+	public List<Product> getProducts() {
+		return products;
 	}
 	public void setProducts(List<Product> products) {
 		this.products = products;

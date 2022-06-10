@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.bkap.DTOs.ProductDto;
 import com.bkap.Entities.Category;
 import com.bkap.Entities.Invoice;
 import com.bkap.Entities.InvoiceDetail;
@@ -30,6 +31,7 @@ import com.bkap.Entities.Request;
 import com.bkap.Entities.UserDetail;
 import com.bkap.Entities.UserInfo;
 import com.bkap.Entities.Users;
+import com.bkap.Entities.page;
 import com.bkap.Services.CategoryServiceImpl;
 import com.bkap.Services.InvoiceServiceImpl;
 import com.bkap.Services.ProductServiceImpl;
@@ -56,7 +58,7 @@ public class UserController {
     //tìm kiếm sản phẩm/cate
     @PostMapping(value = "/product/filter/{sort}/{pageNumber}")
     @CrossOrigin(value = "*", methods = RequestMethod.POST)
-    public Page<Product> filter(@RequestBody ProductFilter filter,@PathVariable("sort") String sort,@PathVariable("pageNumber") int pageNumber) {
+    public page<ProductDto> filter(@RequestBody ProductFilter filter,@PathVariable("sort") String sort,@PathVariable("pageNumber") int pageNumber) {
         return prodService.filter(filter,pageNumber,sort);
     }
 
@@ -69,7 +71,7 @@ public class UserController {
 
     @GetMapping(value = "/getAllProducts")
     @CrossOrigin(value = "*", methods = RequestMethod.GET)
-    public List<Product> getAllProduct() {
+    public List<ProductDto> getAllProduct() {
         return prodService.getAll();
     }
 

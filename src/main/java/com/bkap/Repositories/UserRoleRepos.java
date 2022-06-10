@@ -13,4 +13,8 @@ public interface UserRoleRepos extends JpaRepository<UserRole, Integer> {
 	List<String>getRoleByUser(String username);
 	@Query(value="exec addUserRole ?1,?2",nativeQuery = true)
 	Integer triggerOnRegister(String username,String rolename);
+	@Query(value="select * from UserRole where userId = ?1 ",nativeQuery = true)
+	List<UserRole> getUserRoleByUserId(int userId);
+	@Query(value="select * from UserRole where roleId = ?1 ",nativeQuery = true)
+	List<UserRole> getUserRoleByRoleId(int roleId);
 }

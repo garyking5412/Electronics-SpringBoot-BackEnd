@@ -1,6 +1,5 @@
 package com.bkap.Entities;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -47,12 +46,13 @@ public class Product {
 	private String image;
 	@OneToMany(mappedBy = "product",fetch=FetchType.LAZY)
 	@Transient
+	@JsonIgnore
 	private List<InvoiceDetail> InvoiceDetails;
 	@OneToMany(mappedBy = "product",fetch=FetchType.LAZY)
-	@JsonIgnoreProperties
+	@JsonIgnore
 	private List<Cart> carts;
 	@OneToMany(mappedBy = "product",fetch=FetchType.LAZY)
-	@JsonIgnoreProperties
+	@JsonIgnore
 	private List<Review> reviews ;
 	@ManyToOne
 	@JoinColumn(name="cateId",referencedColumnName = "id")
