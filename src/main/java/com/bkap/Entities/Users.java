@@ -9,6 +9,8 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -19,40 +21,40 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
-@Table(name="Users")
-@JsonIgnoreProperties(value={"hibernateLazyInitializer","handler"})
+@Table(name = "Users")
+@JsonIgnoreProperties(value = { "hibernateLazyInitializer", "handler" })
 public class Users {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="id")
+	@Column(name = "id")
 	private int id;
-	@Column(name="firstName")
+	@Column(name = "firstName")
 	private String firstName;
-	@Column(name="lastName")
+	@Column(name = "lastName")
 	private String lastName;
-	@Column(name="username")
+	@Column(name = "username")
 	private String username;
-	@Column(name="password")
+	@Column(name = "password")
 	private String password;
-	@Column(name="address")
+	@Column(name = "address")
 	private String address;
-	@Column(name="email")
+	@Column(name = "email")
 	private String email;
-	@Column(name="phone")
+	@Column(name = "phone")
 	private int phone;
-	
-	@OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
-	@JsonIgnoreProperties
-	private List<UserRole> UserRoles;
-	
-	@OneToMany(mappedBy = "user",fetch=FetchType.LAZY)
+	@ManyToOne
+	@JoinColumn(name = "roleId", referencedColumnName = "id")
+	private Roles role;
+
+	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
 	private List<Review> reviews;
+
 	public Users() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	
+
 	public int getId() {
 		return id;
 	}
@@ -117,14 +119,13 @@ public class Users {
 		this.phone = phone;
 	}
 
-	public List<UserRole> getUserRoles() {
-		return UserRoles;
+	public Roles getRole() {
+		return role;
 	}
 
-	public void setUserRoles(List<UserRole> userRoles) {
-		UserRoles = userRoles;
+	public void setRole(Roles role) {
+		this.role = role;
 	}
-
 
 	public List<Review> getReviews() {
 		return reviews;
@@ -135,7 +136,7 @@ public class Users {
 	}
 
 	public Users(int id, String firstName, String lastName, String username, String password, String address,
-			String email, int phone, List<UserRole> userRoles, List<Review> reviews) {
+			String email, int phone, Roles role, List<Review> reviews) {
 		super();
 		this.id = id;
 		this.firstName = firstName;
@@ -145,16 +146,14 @@ public class Users {
 		this.address = address;
 		this.email = email;
 		this.phone = phone;
-		UserRoles = userRoles;
+		this.role = role;
 		this.reviews = reviews;
 	}
 
 	@Transient
-	public List<GrantedAuthority> getAuth(){
-		List<GrantedAuthority> auths= new ArrayList<GrantedAuthority>();
-		for (UserRole ur: UserRoles) {
-			auths.add(new SimpleGrantedAuthority(ur.getRole().getName()));
-		}
+	public List<GrantedAuthority> getAuth() {
+		List<GrantedAuthority> auths = new ArrayList<GrantedAuthority>();
+			auths.add(new SimpleGrantedAuthority(this.role.getName()));
 		return auths;
 	}
 }

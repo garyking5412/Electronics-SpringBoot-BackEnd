@@ -1,7 +1,5 @@
 package com.bkap.DTOs;
 
-import javax.persistence.Column;
-
 public class RoleDto {
     private int id;
     private String name;

@@ -13,6 +13,27 @@ public class ProductDto {
 	private float price;
 	private String image;
 	private CategoryDto categoryDto;
+	private int frequency;
+	public ProductDto() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+	public ProductDto(int id, String name, String des, int rate, int status, String color, String spec, int stock,
+			float price, String image, CategoryDto categoryDto, int frequency) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.des = des;
+		this.rate = rate;
+		this.status = status;
+		this.color = color;
+		this.spec = spec;
+		this.stock = stock;
+		this.price = price;
+		this.image = image;
+		this.categoryDto = categoryDto;
+		this.frequency = frequency;
+	}
 	public int getId() {
 		return id;
 	}
@@ -79,24 +100,12 @@ public class ProductDto {
 	public void setCategoryDto(CategoryDto categoryDto) {
 		this.categoryDto = categoryDto;
 	}
-	public ProductDto() {
-		super();
-		// TODO Auto-generated constructor stub
+	public int getFrequency() {
+		return frequency;
 	}
-	public ProductDto(int id, String name, String des, int rate, int status, String color, String spec, int stock,
-			float price, String image, CategoryDto categoryDto) {
-		super();
-		this.id = id;
-		this.name = name;
-		this.des = des;
-		this.rate = rate;
-		this.status = status;
-		this.color = color;
-		this.spec = spec;
-		this.stock = stock;
-		this.price = price;
-		this.image = image;
-		this.categoryDto = categoryDto;
+	public void setFrequency(int frequency) {
+		this.frequency = frequency;
 	}
+
 	
 }

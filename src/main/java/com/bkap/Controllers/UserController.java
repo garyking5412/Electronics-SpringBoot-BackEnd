@@ -1,5 +1,6 @@
 package com.bkap.Controllers;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.bkap.Filters.InvoiceFilter;
@@ -28,6 +29,7 @@ import com.bkap.Entities.InvoiceDetail;
 import com.bkap.Entities.LoginRequest;
 import com.bkap.Entities.Product;
 import com.bkap.Entities.Request;
+import com.bkap.Entities.Roles;
 import com.bkap.Entities.UserDetail;
 import com.bkap.Entities.UserInfo;
 import com.bkap.Entities.Users;
@@ -80,6 +82,16 @@ public class UserController {
     public Page<Product> getAllProduct(@PathVariable("pageNumber") int pageNumber) {
         return prodService.getAllPaginated(pageNumber);
     }
+    @GetMapping(value = "/getTopSelling")
+    @CrossOrigin(value = "*", methods = RequestMethod.GET)
+    public List<ProductDto> getTopSelling() {
+        return prodService.getTopSelling();
+    }
+    @GetMapping(value = "/getTrending/{pageNumber}")
+    @CrossOrigin(value = "*", methods = RequestMethod.GET)
+    public Page<Product> getTrending(@PathVariable("pageNumber") int pageNumber) {
+        return prodService.getTrending(pageNumber);
+    }
 
     //		xem detail sản phẩm/cate
     @GetMapping(value = "/getCategory/{id}")
@@ -108,13 +120,16 @@ public class UserController {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         String hashPassword = encoder.encode(user.getPassword());
         user.setPassword(hashPassword);
+        Roles role = new Roles();
+        role.setId(2);
+        user.setRole(role);
         try {
             us.loadUserByUsername(user.getUsername());
             return "Duplicate!";
         } catch (Exception e) {
             // TODO: handle exception
             if (us.save(user) != null) {
-                if (us.triggerOnRegister(user.getUsername(), "USER") != 0) ;
+//                if (us.triggerOnRegister(user.getUsername(), "USER") != 0) ;
                 return "Success!";
             } else return "Failed:" + e.getMessage();
         }
@@ -128,13 +143,8 @@ public class UserController {
         if (us.loadUserByUsername(username) == null) {
             return null;
         }
-        List<String> roles = us.getRoleByUser(username);
-//		for (Integer integer : roles) {
-//			if(integer == 1) {
-//				return 1;
-//			}
-//		}
-//		return 2;
+        List<String> roles = new ArrayList<String>();
+        roles.add(us.loadRoleByUser(username));
         return roles;
     }
 

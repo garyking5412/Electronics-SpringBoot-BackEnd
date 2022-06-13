@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import com.bkap.DTOs.ProductDto;
 import com.bkap.Entities.Product;
 @Repository
 public interface ProductRepos extends JpaRepository<Product, Integer>, JpaSpecificationExecutor<Product> {
@@ -19,4 +20,7 @@ public interface ProductRepos extends JpaRepository<Product, Integer>, JpaSpecif
 	public List<Object> getProduct();
 	@Query(value="exec updateOnDeleteCategory ?1",nativeQuery=true)
 	public List<Product> updateOnDeleteCategory(int cateId);
+	@Query(value="Select TOP(6) p.id, name,des,rate,status,color,spec,stock,price,image,cateId,count(productId) as frequency from\r\n"
+			+ "Product p inner join InvoiceDetails on p.id = InvoiceDetails.productId group by p.id, name,des,rate,status,color,spec,stock,price,image,cateId order by frequency desc",nativeQuery=true)
+	public List<Object> getTopSelling();
 }
