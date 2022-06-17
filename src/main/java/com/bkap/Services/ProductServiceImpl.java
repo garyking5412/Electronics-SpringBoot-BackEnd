@@ -91,16 +91,6 @@ public class ProductServiceImpl implements ProductService {
 		return repos.findAll(PageRequest.of(pageNumber, 6, Sort.by("id").ascending()));
 	}
 
-	public List<ProductDto> getTopSelling() {
-		// TODO Auto-generated method stub
-		List<Object> products = repos.getTopSelling();
-		List<ProductDto> top = new ArrayList<ProductDto>();
-		for (Object obj : products) {
-			ProductDto dto = mapper.map(obj, ProductDto.class);
-			top.add(dto);
-		}
-		return top;
-	}
 	public Page<Product> getTrending(int pageNumber) {
 		// TODO Auto-generated method stub
 		return repos.findAll(PageRequest.of(pageNumber, 6, Sort.by("rate").descending()));
@@ -150,9 +140,21 @@ public class ProductServiceImpl implements ProductService {
 			ProductDto dto = mapper.map(product, ProductDto.class);
 			dtos.add(dto);
 		}
-		page<ProductDto> pageDto = new page(re.getNumber(), re.getTotalElements(),
+		page<ProductDto> pageDto = new page<ProductDto>(re.getNumber(), re.getTotalElements(),
 				re.getSize(), dtos);
 		return pageDto;
+	}
+
+	@Override
+	public List<ProductDto> getTopSell() {
+		// TODO Auto-generated method stub
+		List<Product> products = repos.getTopSelling();
+		List<ProductDto> dtos = new ArrayList<ProductDto>();
+		for (Product product : products) {
+			ProductDto dto = mapper.map(product, ProductDto.class);
+			dtos.add(dto);
+		}
+		return dtos;
 	}
 
 }

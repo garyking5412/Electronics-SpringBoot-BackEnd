@@ -85,7 +85,7 @@ public class UserController {
     @GetMapping(value = "/getTopSelling")
     @CrossOrigin(value = "*", methods = RequestMethod.GET)
     public List<ProductDto> getTopSelling() {
-        return prodService.getTopSelling();
+        return prodService.getTopSell();
     }
     @GetMapping(value = "/getTrending/{pageNumber}")
     @CrossOrigin(value = "*", methods = RequestMethod.GET)
