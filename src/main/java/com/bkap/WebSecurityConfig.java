@@ -52,7 +52,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.cors().and().csrf().disable().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-				.and().authorizeRequests().antMatchers("/user/**").permitAll()
+				.and().authorizeRequests().antMatchers("/**").permitAll()
 //    	.antMatchers(HttpMethod.GET,"/default/**").permitAll()
 				.anyRequest().authenticated();
 		// Thêm một lớp Filter kiểm tra jwt
