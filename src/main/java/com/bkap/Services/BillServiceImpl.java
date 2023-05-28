@@ -25,6 +25,9 @@ public class BillServiceImpl implements BillService{
     private final Logger logger  = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
+    private GrpcClient grpcClient;
+
+    @Autowired
     private BillMapper billMapper;
 
 
@@ -32,6 +35,8 @@ public class BillServiceImpl implements BillService{
     public List<BillDTO> getAllBills() {
         List<Bill> bills = billRepository.findAll();
         logger.info(">>>>>>>>Getting all bills>>>>>>>>>");
+        com.example.electronicsspringbootclientservice.PingResponse response = grpcClient.ping(com.example.electronicsspringbootclientservice.PingRequest.newBuilder().setRequest("bankai").build());
+        logger.info(">>>>>>>>>>>>>>pong from grpc server: "+response.getMessage()+"at: "+response.getTime()+">>>>>>>>>>>>>>>>>");
         return bills.stream().map(bill -> billMapper.convertBillToBillDto(bill)).collect(Collectors.toList());
     }
 

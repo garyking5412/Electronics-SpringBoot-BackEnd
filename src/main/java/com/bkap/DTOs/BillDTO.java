@@ -13,5 +13,5 @@ public class BillDTO {
     private int invoiceId;
     private Date invoiceDate;
     private Long invoiceTotal;
-    private List<BillDetail> billDetailList;
+    private List<BillDetailDTO> billDetailList;
 }
