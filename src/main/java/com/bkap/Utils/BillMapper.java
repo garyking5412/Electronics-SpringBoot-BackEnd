@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 import javax.swing.text.html.Option;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -38,11 +39,13 @@ public class BillMapper {
         dto.setInvoiceId(bill.getInvoiceId());
         dto.setInvoiceDate(bill.getInvoiceDate());
         dto.setInvoiceTotal(bill.getInvoiceTotal());
-        List<BillDetailDTO> billDetailDTOList = bill.getBillDetailList().stream().map(billDetail -> {
-            BillDetailDTO billDetailDTO = billDetailMapper.convertBillDetailToBillDetailDto(billDetail);
-            return billDetailDTO;
-        }).collect(Collectors.toList());
-        dto.setBillDetailList(billDetailDTOList);
+        if (Objects.nonNull(bill.getBillDetailList())) {
+            List<BillDetailDTO> billDetailDTOList = bill.getBillDetailList().stream().map(billDetail -> {
+                BillDetailDTO billDetailDTO = billDetailMapper.convertBillDetailToBillDetailDto(billDetail);
+                return billDetailDTO;
+            }).collect(Collectors.toList());
+            dto.setBillDetailList(billDetailDTOList);
+        }
         return dto;
     }
 

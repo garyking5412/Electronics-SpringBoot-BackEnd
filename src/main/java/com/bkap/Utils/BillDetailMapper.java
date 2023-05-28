@@ -46,12 +46,25 @@ public class BillDetailMapper {
         return dto;
     }
 
-    public BillDetailDTO convertBillDetailToBillDetailDto(BillDetail bill) {
+    public BillDetailDTO convertBillDetailToBillDetailDto(BillDetail billDetail) {
+        ManagedChannel channel = ManagedChannelBuilder.forAddress("localhost", 3004).usePlaintext().build();
+        StudentServiceGrpc.StudentServiceBlockingStub stub = StudentServiceGrpc.newBlockingStub(channel);
         BillDetailDTO dto = new BillDetailDTO();
-        dto.setProductId(bill.getProductId());
-        dto.setInvoiceDetailId(bill.getInvoiceDetailId());
-        dto.setProductQuantity(bill.getProductQuantity());
-        dto.setBillId(bill.getBill().getInvoiceId());
+        dto.setInvoiceDetailId(billDetail.getInvoiceDetailId());
+        dto.setBillId(billDetail.getBill().getInvoiceId());
+        dto.setProductQuantity(billDetail.getProductQuantity());
+        dto.setProductId(billDetail.getProductId());
+        try {
+            com.example.electronicsspringbootclientservice.GetProductByIdRequest request = com.example.electronicsspringbootclientservice.GetProductByIdRequest.newBuilder().setProductId(billDetail.getProductId()).build();
+            com.example.electronicsspringbootclientservice.GetProductByIdResponse response = stub.getProductById(request);
+            dto.setProductName(response.getProductName());
+            dto.setProductCategory(response.getProductCategoryName());
+            dto.setProductPrice(response.getProductPrice());
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            channel.shutdown();
+        }
         return dto;
     }
 
