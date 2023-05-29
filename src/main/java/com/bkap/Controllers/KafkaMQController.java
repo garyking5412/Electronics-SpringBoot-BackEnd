@@ -26,6 +26,7 @@ import javax.transaction.Transactional;
 import java.util.Date;
 import java.util.Objects;
 import java.util.Properties;
+
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 
 @Controller
@@ -38,7 +39,7 @@ public class KafkaMQController {
     private BillDetailService billDetailService;
 
     @Autowired
-    private JavaMailSender javaMailSender;
+    private JavaMailSenderImpl javaMailSender;
 
     @Nullable
     private javax.mail.Session session;
@@ -72,14 +73,20 @@ public class KafkaMQController {
 //    }
 
     @KafkaListener(id = "invoiceService", topics = "invoice")
+    public void listen(invoiceDTO dto) {
+        BillDTO savedBillDto = insertBillAndBillDetails(dto);
+        BillDTO savedBill = billService.getBillByID(savedBillDto.getInvoiceId());
+        System.out.println(savedBill);
+    }
+
     @Transactional
-    public BillDTO listen(invoiceDTO dto) {
+    public BillDTO insertBillAndBillDetails(invoiceDTO dto) {
         BillDTO billDTO = new BillDTO();
         billDTO.setInvoiceDate(dto.getInvoiceDate());
         billDTO.setInvoiceTotal(dto.getInvoiceTotal());
         logger.info(">>>>>>>>>>>> received invoice request >>>>>>>>>>>>>>>>>>>>>");
         BillDTO savedBillDTO = billService.insertBill(billDTO);
-        if(Objects.nonNull(savedBillDTO)){
+        if (Objects.nonNull(savedBillDTO)) {
             logger.info(">>>>>>>>>>>> saving invoice detail for invoice id of: " + savedBillDTO.getInvoiceId() + " >>>>>>>>>>>>>>>>>>>>>");
             dto.getBillDetailList().forEach(detail -> {
                 BillDetailDTO detailDto = new BillDetailDTO();
@@ -89,17 +96,15 @@ public class KafkaMQController {
                 billDetailService.insertBillDetail(detailDto);
             });
         }
-        BillDTO savedBill = billService.getBillByID(savedBillDTO.getInvoiceId());
-        System.out.println(savedBill);
-        return savedBill;
+        return savedBillDTO;
     }
 
     @KafkaListener(id = "notiService", topics = "notification")
     public void listen(MessageDTO dto) {
         logger.info(">>>>>>>>>>>> received message inbound for: " + dto.getToName() + " >>>>>>>>>>>>>>>>>>>>>");
         MimeMessage mimeMessage = new MimeMessage(this.getSession());
-        try{
-            MimeMessageHelper message = new MimeMessageHelper(mimeMessage,false, CharEncoding.UTF_8);
+        try {
+            MimeMessageHelper message = new MimeMessageHelper(mimeMessage, false, CharEncoding.UTF_8);
             message.setTo(dto.getTo());
             message.setFrom("TXTHAI@KAFKASERVER.VN");
             message.setSubject("test kafka notification messaging service");
@@ -107,8 +112,7 @@ public class KafkaMQController {
             message.setSentDate(new Date());
             javaMailSender.send(mimeMessage);
             logger.debug("Sent e-mail to User '{}'", dto.getTo());
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             logger.warn("E-mail could not be sent to user '{}', exception is: {}", dto.getTo(), e.getMessage());
         }
     }

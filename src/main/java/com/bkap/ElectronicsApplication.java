@@ -24,7 +24,7 @@ public class ElectronicsApplication {
     }
 
     @Bean
-    JavaMailSender javaMailSender() {
+    JavaMailSenderImpl javaMailSenderImpl() {
         return new JavaMailSenderImpl();
     }
 }
