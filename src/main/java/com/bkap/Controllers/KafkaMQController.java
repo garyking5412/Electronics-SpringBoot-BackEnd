@@ -74,9 +74,16 @@ public class KafkaMQController {
 
     @KafkaListener(id = "invoiceService", topics = "invoice")
     public void listen(invoiceDTO dto) {
-        BillDTO savedBillDto = insertBillAndBillDetails(dto);
-        BillDTO savedBill = billService.getBillByID(savedBillDto.getInvoiceId());
-        System.out.println(savedBill);
+        logger.info("received new event from invoice topics: "+dto.getInvoiceDate());
+//        BillDTO savedBillDto = insertBillAndBillDetails(dto);
+//        BillDTO savedBill = billService.getBillByID(savedBillDto.getInvoiceId());
+//        System.out.println(savedBill);
+        throw new RuntimeException();
+    }
+
+    @KafkaListener(id="dltGroup", topics = "invoice.DLT")
+    public void errorHandler(invoiceDTO dto){
+        logger.info("received new event from dead letter topics: "+dto.getInvoiceDate());
     }
 
     @Transactional

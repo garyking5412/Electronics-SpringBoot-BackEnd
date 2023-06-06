@@ -6,8 +6,11 @@ import com.bkap.Model.Bill;
 import com.bkap.Model.BillDetail;
 import com.bkap.Repositories.BillRepository;
 import com.example.electronicsspringbootclientservice.StudentServiceGrpc;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -20,8 +23,11 @@ public class BillDetailMapper {
     @Autowired
     private BillRepository billRepository;
 
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    @HystrixCommand(fallbackMethod = "fallbackMethodForHystrixCommand")
     public BillDetailDTO convertBillDetailToBillDetailDto(Optional<BillDetail> billDetail) {
-        ManagedChannel channel = ManagedChannelBuilder.forAddress("localhost",3004).usePlaintext().build();
+        ManagedChannel channel = ManagedChannelBuilder.forAddress("localhost", 3004).usePlaintext().build();
         StudentServiceGrpc.StudentServiceBlockingStub stub = StudentServiceGrpc.newBlockingStub(channel);
         BillDetailDTO dto = new BillDetailDTO();
         billDetail.ifPresent(b -> {
@@ -35,10 +41,9 @@ public class BillDetailMapper {
                 dto.setProductName(response.getProductName());
                 dto.setProductCategory(response.getProductCategoryName());
                 dto.setProductPrice(response.getProductPrice());
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
-            }
-            finally {
+            } finally {
                 channel.shutdown();
             }
 
@@ -46,6 +51,11 @@ public class BillDetailMapper {
         return dto;
     }
 
+    public BillDetailDTO fallbackMethodForHystrixCommand(Optional<BillDetail> billDetail){
+        logger.info(">>>>>>>>>>>>>>>>> Executing Hystrix Fallback Method >>>>>>>>>>>>>>");
+        return new BillDetailDTO();
+    }
+//    @HystrixCommand(fallbackMethod = "fallbackMethodForHystrixCommand")
     public BillDetailDTO convertBillDetailToBillDetailDto(BillDetail billDetail) {
         ManagedChannel channel = ManagedChannelBuilder.forAddress("localhost", 3004).usePlaintext().build();
         StudentServiceGrpc.StudentServiceBlockingStub stub = StudentServiceGrpc.newBlockingStub(channel);
@@ -67,6 +77,8 @@ public class BillDetailMapper {
         }
         return dto;
     }
+
+
 
     public BillDetail convertBillDetailDtoToBillDetail(BillDetailDTO dto) {
         BillDetail billDetail = new BillDetail();
