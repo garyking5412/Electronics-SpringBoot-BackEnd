@@ -75,10 +75,13 @@ public class KafkaMQController {
     @KafkaListener(id = "invoiceService", topics = "invoice")
     public void listen(invoiceDTO dto) {
         logger.info("received new event from invoice topics: "+dto.getInvoiceDate());
-//        BillDTO savedBillDto = insertBillAndBillDetails(dto);
-//        BillDTO savedBill = billService.getBillByID(savedBillDto.getInvoiceId());
-//        System.out.println(savedBill);
-        throw new RuntimeException();
+        try {
+            BillDTO savedBillDto = insertBillAndBillDetails(dto);
+            BillDTO savedBill = billService.getBillByID(savedBillDto.getInvoiceId());
+            System.out.println(savedBill);
+        }catch (Exception e){
+            throw new RuntimeException();
+        }
     }
 
     @KafkaListener(id="dltGroup", topics = "invoice.DLT")

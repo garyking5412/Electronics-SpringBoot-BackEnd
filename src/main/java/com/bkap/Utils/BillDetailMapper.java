@@ -5,7 +5,7 @@ import com.bkap.DTOs.BillDetailDTO;
 import com.bkap.Model.Bill;
 import com.bkap.Model.BillDetail;
 import com.bkap.Repositories.BillRepository;
-import com.example.electronicsspringbootclientservice.StudentServiceGrpc;
+import com.example.electronicsspringbootclientservice.PingServiceGrpc;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
@@ -27,8 +27,8 @@ public class BillDetailMapper {
 
     @HystrixCommand(fallbackMethod = "fallbackMethodForHystrixCommand")
     public BillDetailDTO convertBillDetailToBillDetailDto(Optional<BillDetail> billDetail) {
-        ManagedChannel channel = ManagedChannelBuilder.forAddress("localhost", 3004).usePlaintext().build();
-        StudentServiceGrpc.StudentServiceBlockingStub stub = StudentServiceGrpc.newBlockingStub(channel);
+        ManagedChannel channel = ManagedChannelBuilder.forAddress("localhost", 1900).usePlaintext().build();
+        PingServiceGrpc.PingServiceBlockingStub stub = PingServiceGrpc.newBlockingStub(channel);
         BillDetailDTO dto = new BillDetailDTO();
         billDetail.ifPresent(b -> {
             dto.setInvoiceDetailId(b.getInvoiceDetailId());
@@ -57,8 +57,8 @@ public class BillDetailMapper {
     }
 //    @HystrixCommand(fallbackMethod = "fallbackMethodForHystrixCommand")
     public BillDetailDTO convertBillDetailToBillDetailDto(BillDetail billDetail) {
-        ManagedChannel channel = ManagedChannelBuilder.forAddress("localhost", 3004).usePlaintext().build();
-        StudentServiceGrpc.StudentServiceBlockingStub stub = StudentServiceGrpc.newBlockingStub(channel);
+        ManagedChannel channel = ManagedChannelBuilder.forAddress("localhost", 1900).usePlaintext().build();
+        PingServiceGrpc.PingServiceBlockingStub stub = PingServiceGrpc.newBlockingStub(channel);
         BillDetailDTO dto = new BillDetailDTO();
         dto.setInvoiceDetailId(billDetail.getInvoiceDetailId());
         dto.setBillId(billDetail.getBill().getInvoiceId());
