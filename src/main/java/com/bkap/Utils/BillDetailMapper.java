@@ -27,7 +27,7 @@ public class BillDetailMapper {
 
     @HystrixCommand(fallbackMethod = "fallbackMethodForHystrixCommand")
     public BillDetailDTO convertBillDetailToBillDetailDto(Optional<BillDetail> billDetail) {
-        ManagedChannel channel = ManagedChannelBuilder.forAddress("localhost", 1900).usePlaintext().build();
+        ManagedChannel channel = ManagedChannelBuilder.forAddress("localhost", 1900).intercept(new GrpcClientRequestInterceptor()).usePlaintext().build();
         PingServiceGrpc.PingServiceBlockingStub stub = PingServiceGrpc.newBlockingStub(channel);
         BillDetailDTO dto = new BillDetailDTO();
         billDetail.ifPresent(b -> {
@@ -57,8 +57,10 @@ public class BillDetailMapper {
     }
 //    @HystrixCommand(fallbackMethod = "fallbackMethodForHystrixCommand")
     public BillDetailDTO convertBillDetailToBillDetailDto(BillDetail billDetail) {
-        ManagedChannel channel = ManagedChannelBuilder.forAddress("localhost", 1900).usePlaintext().build();
-        PingServiceGrpc.PingServiceBlockingStub stub = PingServiceGrpc.newBlockingStub(channel);
+        ManagedChannel channel = ManagedChannelBuilder.forAddress("localhost", 1900).intercept(new GrpcClientRequestInterceptor()).usePlaintext().build();
+        String jwt = JWTUtil.getCompactJWT();
+        BearerToken token = new BearerToken(jwt);
+        PingServiceGrpc.PingServiceBlockingStub stub = PingServiceGrpc.newBlockingStub(channel).withCallCredentials(token);
         BillDetailDTO dto = new BillDetailDTO();
         dto.setInvoiceDetailId(billDetail.getInvoiceDetailId());
         dto.setBillId(billDetail.getBill().getInvoiceId());

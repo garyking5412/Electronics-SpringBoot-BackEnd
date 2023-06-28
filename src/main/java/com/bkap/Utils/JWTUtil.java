@@ -44,11 +44,11 @@ public class JWTUtil {
 		public String generateToken(UserDetail userDetail) {
 			
 			Map<String, Object> claims = new HashMap<>();
-			
+
 			Date date = new Date();
-			
+
 			Date expiryDate = new Date(date.getTime()+ EXPIRATION_TIME);
-			
+
 			// tạo jwt từ id user
 			String jwt = "";
 			try {
@@ -62,6 +62,11 @@ public class JWTUtil {
 				e.printStackTrace();
 			}
 			return jwt;
+		}
+
+		// generate token with only signing key
+		public static String getCompactJWT(){
+			return Jwts.builder().setSubject("Greeting from GRPC Client").signWith(SignatureAlgorithm.HS256,Constants.JWT_SIGNING_KEY).compact();
 		}
 		
 		// Lấy thông tin user từ jwt
