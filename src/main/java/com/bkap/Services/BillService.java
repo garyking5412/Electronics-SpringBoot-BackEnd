@@ -1,7 +1,6 @@
 package com.bkap.Services;
 
 import com.bkap.DTOs.BillDTO;
-import com.bkap.Model.Bill;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

@@ -2,12 +2,10 @@ package com.bkap.Utils;
 
 import com.bkap.DTOs.BillDTO;
 import com.bkap.DTOs.BillDetailDTO;
-import com.bkap.Model.Bill;
-import com.bkap.Model.BillDetail;
+import com.bkap.Services.Model.Bill;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;

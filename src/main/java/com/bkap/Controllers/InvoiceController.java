@@ -90,7 +90,7 @@ public class InvoiceController {
 	public void putInvoiceDetail(@PathVariable("id") int id,@RequestBody InvoiceDetail invoiceDetail) {
 		invoiceDetail.setId(id);
 //		return service.merge(p);
-		service.merge(invoiceDetail);
+		service.merge(invoiceDetail); 
 	}
 	@DeleteMapping(value="/invoiceDetail/{id}")
 	@CrossOrigin(value="*",methods=RequestMethod.DELETE)

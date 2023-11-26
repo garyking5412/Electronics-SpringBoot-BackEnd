@@ -1,5 +1,7 @@
 package com.bkap;
 
+import net.devh.boot.grpc.server.security.authentication.BasicGrpcAuthenticationReader;
+import net.devh.boot.grpc.server.security.authentication.GrpcAuthenticationReader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,6 +23,7 @@ import com.bkap.Services.UserServiceImpl;
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+
 
 	@Autowired
 	private UserServiceImpl UserService;
@@ -58,5 +61,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		// Thêm một lớp Filter kiểm tra jwt
 		http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 	}
-
+	@Bean
+	public GrpcAuthenticationReader grpcAuthenticationReader(){
+		return new BasicGrpcAuthenticationReader();
+	}
 }

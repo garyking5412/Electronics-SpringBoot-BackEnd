@@ -1,4 +1,4 @@
-package com.bkap.Model;
+package com.bkap.Services.Model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;

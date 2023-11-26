@@ -1,6 +1,6 @@
 package com.bkap.Repositories;
 
-import com.bkap.Model.BillDetail;
+import com.bkap.Services.Model.BillDetail;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

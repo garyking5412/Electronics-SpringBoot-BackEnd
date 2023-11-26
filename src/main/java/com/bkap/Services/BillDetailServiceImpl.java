@@ -1,9 +1,10 @@
 package com.bkap.Services;
 
 import com.bkap.DTOs.BillDetailDTO;
-import com.bkap.Model.BillDetail;
+import com.bkap.Services.Model.BillDetail;
 import com.bkap.Repositories.BillDetailRepository;
 import com.bkap.Utils.BillDetailMapper;
+import com.bkap.Utils.annotations.LogExecutionTime;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,6 +29,7 @@ public class BillDetailServiceImpl implements BillDetailService {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Override
+    @LogExecutionTime
     public List<BillDetailDTO> getAllBillDetails() {
         List<BillDetail> billDetails = billDetailRepository.findAll();
         logger.info(">>>>>>>>Getting all bills details>>>>>>>>>");

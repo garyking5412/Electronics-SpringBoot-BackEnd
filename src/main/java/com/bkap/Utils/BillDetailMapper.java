@@ -1,9 +1,8 @@
 package com.bkap.Utils;
 
-import com.bkap.DTOs.BillDTO;
 import com.bkap.DTOs.BillDetailDTO;
-import com.bkap.Model.Bill;
-import com.bkap.Model.BillDetail;
+import com.bkap.Services.Model.Bill;
+import com.bkap.Services.Model.BillDetail;
 import com.bkap.Repositories.BillRepository;
 import com.example.electronicsspringbootclientservice.PingServiceGrpc;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
@@ -28,6 +27,7 @@ public class BillDetailMapper {
     @HystrixCommand(fallbackMethod = "fallbackMethodForHystrixCommand")
     public BillDetailDTO convertBillDetailToBillDetailDto(Optional<BillDetail> billDetail) {
         ManagedChannel channel = ManagedChannelBuilder.forAddress("localhost", 1900).intercept(new GrpcClientRequestInterceptor()).usePlaintext().build();
+//        ManagedChannel channel = ManagedChannelBuilder.forAddress("localhost", 1900).usePlaintext().build();
         PingServiceGrpc.PingServiceBlockingStub stub = PingServiceGrpc.newBlockingStub(channel);
         BillDetailDTO dto = new BillDetailDTO();
         billDetail.ifPresent(b -> {
@@ -87,12 +87,10 @@ public class BillDetailMapper {
         billDetail.setInvoiceDetailId(dto.getInvoiceDetailId());
         billDetail.setProductId(dto.getProductId());
         billDetail.setProductQuantity(dto.getProductQuantity());
-        if (Objects.nonNull(dto.getBillId())) {
-            Optional<Bill> bill = billRepository.findById(dto.getBillId());
-            bill.ifPresentOrElse(billDetail::setBill, () -> {
-                billDetail.setBill(null);
-            });
-        }
+        Optional<Bill> bill = billRepository.findById(dto.getBillId());
+        bill.ifPresentOrElse(billDetail::setBill, () -> {
+            billDetail.setBill(null);
+        });
         return billDetail;
     }
 
